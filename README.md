@@ -34,7 +34,7 @@ The tool uses a bash script to extract all GPU-using processes from the system, 
 
 - Install the package using pip:
   ```
-  pip install dockergpustats
+  pip install -i https://test.pypi.org/simple/ dockergpustats
   ```
 - Run the command:
   ```
