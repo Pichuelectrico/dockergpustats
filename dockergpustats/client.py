@@ -14,7 +14,7 @@ def create_json_file():
 
 def load_container_data(json_file):
     if not os.path.exists(json_file):
-        print(f"Actualizando datos espere...")
+        print(f"Actualizando datos, espere...")
         create_json_file()
 
     try:
@@ -34,7 +34,6 @@ def display_stats(data):
         "Container Name",
         "Container ID",
         "Port",
-        "Jupyter Token",
         "CPU Usage",
         "Memory Usage",
         "Memory %",
@@ -52,7 +51,6 @@ def display_stats(data):
         container_name = container["container_name"]
         container_id = container["container_id"]
         port = container["port"]
-        token = container["token"]
         cpu_usage = container["cpu_usage"]
         mem_usage = container["mem_usage"]
         mem_perc = container["mem_perc"]
@@ -62,6 +60,9 @@ def display_stats(data):
         jupyter_sessions = container.get("jupyter_sessions", [])
         gpu_info = container.get("gpu_info", [])
 
+        # Bandera para rastrear si un PID de sesión coincide con un PID de GPU
+        matched_gpu_pids = set()
+
         # Si hay notebooks en el contenedor
         if jupyter_sessions:
             for session in jupyter_sessions:
@@ -69,7 +70,6 @@ def display_stats(data):
                     container_name,
                     container_id,
                     port,
-                    token,
                     cpu_usage,
                     mem_usage,
                     mem_perc,
@@ -83,44 +83,44 @@ def display_stats(data):
                     "",  # Total GPU %
                 ]
 
-                # Agregar información de GPU si está disponible
+                # Agregar información de GPU si coincide el PID
                 for gpu in gpu_info:
                     if gpu["docker_container_running_gpu_pid"] == session["pid"]:
-                        row[11] = gpu["docker_container_used_gpu_id"]
-                        row[12] = gpu["docker_container_gpu_memory_used_MiB"]
-                        row[13] = gpu["docker_container_total_gpu_used_MiB"]
-                        row[14] = gpu["porcentaje_total_gpu_percent_ram_used"]
+                        row[10] = gpu["docker_container_used_gpu_id"]
+                        row[11] = gpu["docker_container_gpu_memory_used_MiB"]
+                        row[12] = gpu["docker_container_total_gpu_used_MiB"]
+                        row[13] = gpu["porcentaje_total_gpu_percent_ram_used"]
+                        matched_gpu_pids.add(gpu["docker_container_running_gpu_pid"])
 
                 table.add_row(row)
 
-        # Si no hay notebooks en el contenedor, solo mostrar información de GPU
-        elif gpu_info:
-            row = [
-                container_name,
-                container_id,
-                port,
-                token,
-                cpu_usage,
-                mem_usage,
-                mem_perc,
-                net_io,
-                block_io,
-                "",  # Notebook Name
-                "",  # PID
-                gpu_info[0]["docker_container_used_gpu_id"],  # GPU ID
-                gpu_info[0]["docker_container_gpu_memory_used_MiB"],  # GPU Memory Used
-                gpu_info[0]["docker_container_total_gpu_used_MiB"],  # Total GPUs Used
-                gpu_info[0]["porcentaje_total_gpu_percent_ram_used"],  # Total GPU %
-            ]
-            table.add_row(row)
+        # Si hay GPUs en uso pero los PIDs no coinciden con los de Jupyter, agregamos una fila con la info de GPU
+        for gpu in gpu_info:
+            if gpu["docker_container_running_gpu_pid"] not in matched_gpu_pids:
+                row = [
+                    container_name,
+                    container_id,
+                    port,
+                    cpu_usage,
+                    mem_usage,
+                    mem_perc,
+                    net_io,
+                    block_io,
+                    "-",  # No hay notebook asociado
+                    "-",  # No hay PID de Jupyter asociado
+                    gpu["docker_container_used_gpu_id"],  # GPU ID
+                    gpu["docker_container_gpu_memory_used_MiB"],  # GPU Memory Used
+                    gpu["docker_container_total_gpu_used_MiB"],  # Total GPUs Used
+                    gpu["porcentaje_total_gpu_percent_ram_used"],  # Total GPU %
+                ]
+                table.add_row(row)
 
         # Si no hay ni notebooks ni GPUs, solo mostramos la información básica del contenedor
-        else:
+        if not jupyter_sessions and not gpu_info:
             row = [
                 container_name,
                 container_id,
                 port,
-                token,
                 cpu_usage,
                 mem_usage,
                 mem_perc,
@@ -147,10 +147,15 @@ def main():
         os.system("clear")
     except:
         os.system("cls")
+    print("Cargando datos, espere...")
     json_file = "data.json"
     create_json_file()
     while True:
         data = load_container_data(json_file)
+        try:
+            os.system("clear")
+        except:
+            os.system("cls")
         display_stats(data)
         time.sleep(65)
         os.remove("data.json")

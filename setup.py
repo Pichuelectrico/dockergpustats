@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="dockergpustats",
-    version="0.2",
+    version="0.3",
     packages=find_packages(),
     description="A Python tool for GPU process monitoring in Docker containers and retrieving Jupyter Notebook tokens from Colab images.",
     long_description=open("README.md").read(),
