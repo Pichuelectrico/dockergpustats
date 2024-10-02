@@ -2,8 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name="dockergpustats",
-    version="0.5",
+    version="0.6",
     packages=find_packages(),
+    include_package_data=True,
     description="A Python tool for GPU process monitoring in Docker containers and retrieving Jupyter Notebook tokens from Colab images.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
@@ -32,4 +33,10 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     python_requires=">=3.6",
+    package_data={
+        "dockergpustats": [
+            "*.py",
+            "p2g.sh",
+        ],  # Asegúrate de incluir los archivos necesarios
+    },
 )
