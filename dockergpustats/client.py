@@ -64,7 +64,7 @@ def display_stats(data):
         if jupyter_sessions:
             for session in jupyter_sessions:
 
-                notebook_name = session.get("notebook_name", "")[:60]
+                notebook_name = session.get("notebook_name", "")[:50]
 
                 row = [
                     container_name,

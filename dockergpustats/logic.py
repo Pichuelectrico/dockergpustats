@@ -240,7 +240,9 @@ def parse_gpu_data(gpu_data, total_gpu_memory):
                     "docker_container_gpu_memory_used_MiB": gpu_memory_used,
                     "docker_container_total_gpus_used": len(container_gpu_util),
                     "docker_container_total_gpu_used_MiB": total_gpu_memory_used,
-                    "porcentaje_total_gpu_percent_ram_used": percentage_memory_used,
+                    "porcentaje_total_gpu_percent_ram_used": round(
+                        percentage_memory_used, 5
+                    ),
                 }
                 containers.append(metrics_results)
 
