@@ -2,6 +2,7 @@ import json
 import subprocess
 import re
 import requests
+import os
 from concurrent.futures import ThreadPoolExecutor
 
 
@@ -148,7 +149,7 @@ def get_jupyter_sessions(server_url, token):
 def get_gpu_usage():
     try:
         result = subprocess.run(
-            ["./p2g.sh"],
+            [os.path.join(os.path.dirname(__file__), "p2g.sh")],
             capture_output=True,
             text=True,
             check=True,
@@ -326,5 +327,5 @@ def process_container(container, gpu_data, total_gpu_memory):
     return container_data
 
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     main()

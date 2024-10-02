@@ -7,7 +7,9 @@ from prettytable import PrettyTable
 
 def create_json_file():
     try:
-        subprocess.run(["python", "logic.py"], check=True)
+        subprocess.run(
+            ["python", os.path.join(os.path.dirname(__file__), "logic.py")], check=True
+        )
     except subprocess.CalledProcessError as e:
         print(f"Error al ejecutar el script original: {e}")
 
@@ -147,6 +149,7 @@ def main():
         os.system("cls")
     json_file = "data.json"
     create_json_file()
+    time.sleep(1)
     while True:
         data = load_container_data(json_file)
         display_stats(data)
