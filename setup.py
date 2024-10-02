@@ -14,7 +14,7 @@ setup(
     install_requires=[
         "python-dotenv==1.0.1",
         "requests==2.32.3",
-        "setuptools==58.1.0",
+        "setuptools>=58.1.0",
         "pprintpp==0.4.0",
         "regex==2023.10.3",
         "prettytable==3.11.0",
