@@ -253,7 +253,8 @@ def parse_gpu_data(gpu_data, total_gpu_memory):
     return containers
 
 
-def main(prefix=""):
+def main():
+    prefix = ""  # Optional add here the Prefix of the container names to retrieve
     containers = get_container_names(prefix)
     total_gpu_memory = get_total_gpu_memory()
     gpu_data = parse_gpu_data(get_gpu_usage(), total_gpu_memory)

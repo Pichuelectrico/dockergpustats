@@ -2,24 +2,22 @@ import json
 import os
 import subprocess
 import time
-import argparse
 from prettytable import PrettyTable
 
 
-def create_json_file(prefix=""):
+def create_json_file():
     try:
         subprocess.run(
-            ["python", os.path.join(os.path.dirname(__file__), "logic.py"), prefix],
-            check=True,
+            ["python", os.path.join(os.path.dirname(__file__), "logic.py")], check=True
         )
     except subprocess.CalledProcessError as e:
         print(f"Error al ejecutar el script original: {e}")
 
 
-def load_container_data(json_file, prefix=""):
+def load_container_data(json_file):
     if not os.path.exists(json_file):
         print(f"Actualizando datos espere...")
-        create_json_file(prefix)
+        create_json_file()
 
     try:
         with open(json_file, "r") as f:
@@ -136,16 +134,6 @@ def display_stats(data):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Monitor GPU usage in Docker containers."
-    )
-    parser.add_argument(
-        "prefix",
-        nargs="?",
-        default="",
-        help='Prefix for the container names to retrieve (default: "")',
-    )
-    args = parser.parse_args()
     try:
         os.remove("data.json")
     except OSError:
@@ -155,10 +143,10 @@ def main():
     except:
         os.system("cls")
     json_file = "data.json"
-    create_json_file(args.prefix)
+    create_json_file()
     time.sleep(1)
     while True:
-        data = load_container_data(json_file, args.prefix)
+        data = load_container_data(json_file)
         display_stats(data)
         time.sleep(65)
         os.remove("data.json")

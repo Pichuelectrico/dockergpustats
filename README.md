@@ -44,3 +44,7 @@ The tool uses a bash script to extract all GPU-using processes from the system, 
 ## How to contribute
 
 To contribute, fork the repository and submit a pull request with your changes. Refer to `CONTRIBUTING.md` for more information.
+
+## Working On:
+
+- Add a way to change the prefix on the logic.py from the command-line
