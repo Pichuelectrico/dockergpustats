@@ -1,3 +1,4 @@
+import argparse
 import json
 import subprocess
 import re
@@ -254,7 +255,17 @@ def parse_gpu_data(gpu_data, total_gpu_memory):
 
 
 def main():
-    prefix = ""  # Optional add here the Prefix of the container names to retrieve
+    parser = argparse.ArgumentParser(
+        description="Monitor GPU usage in Docker containers and retrieve Jupyter Notebook tokens."
+    )
+    parser.add_argument(
+        "prefix",
+        nargs="?",
+        default="",
+        help='Prefix for the container names to retrieve (default: "")',
+    )
+    args = parser.parse_args()
+    prefix = args.prefix
     containers = get_container_names(prefix)
     total_gpu_memory = get_total_gpu_memory()
     gpu_data = parse_gpu_data(get_gpu_usage(), total_gpu_memory)
