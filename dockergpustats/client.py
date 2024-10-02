@@ -35,7 +35,6 @@ def display_stats(data):
     table.field_names = [
         "Container Name",
         "Port",
-        "Jupyter Token",
         "CPU Usage",
         "Memory Usage",
         "Memory %",
@@ -52,7 +51,6 @@ def display_stats(data):
     for container in data:
         container_name = container["container_name"]
         port = container["port"]
-        token = container["token"]
         cpu_usage = container["cpu_usage"]
         mem_usage = container["mem_usage"]
         mem_perc = container["mem_perc"]
@@ -71,7 +69,6 @@ def display_stats(data):
                 row = [
                     container_name,
                     port,
-                    token,
                     cpu_usage,
                     mem_usage,
                     mem_perc,
@@ -88,10 +85,10 @@ def display_stats(data):
                 # Agregar información de GPU si está disponible
                 for gpu in gpu_info:
                     if gpu["docker_container_running_gpu_pid"] == session["pid"]:
-                        row[10] = gpu["docker_container_used_gpu_id"]
-                        row[11] = gpu["docker_container_gpu_memory_used_MiB"]
-                        row[12] = gpu["docker_container_total_gpu_used_MiB"]
-                        row[13] = gpu["porcentaje_total_gpu_percent_ram_used"]
+                        row[9] = gpu["docker_container_used_gpu_id"]
+                        row[10] = gpu["docker_container_gpu_memory_used_MiB"]
+                        row[11] = gpu["docker_container_total_gpu_used_MiB"]
+                        row[12] = gpu["porcentaje_total_gpu_percent_ram_used"]
 
                 table.add_row(row)
 
@@ -100,7 +97,6 @@ def display_stats(data):
             row = [
                 container_name,
                 port,
-                token,
                 cpu_usage,
                 mem_usage,
                 mem_perc,
@@ -120,7 +116,6 @@ def display_stats(data):
             row = [
                 container_name,
                 port,
-                token,
                 cpu_usage,
                 mem_usage,
                 mem_perc,
