@@ -303,6 +303,10 @@ def process_container(container, gpu_data, total_gpu_memory):
         server_url = f"http://127.0.0.1:{port}"
         jupyter_sessions = get_jupyter_sessions(server_url, tokens)
         for session in jupyter_sessions:
+            try:
+                print(session["kernel"])
+            except:
+                continue
             kernel_id = session["kernel"]["id"]
             notebook_name = session["notebook"]["name"]
             pid = get_pid_for_kernel(kernel_id)
